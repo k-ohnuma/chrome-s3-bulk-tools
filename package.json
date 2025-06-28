@@ -1,0 +1,17 @@
+{
+  "name": "chrome-s3-bulk-tools",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild src/*.ts --bundle --outdir=dist --format=esm"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "description": "",
+  "devDependencies": {
+    "@types/chrome": "^0.0.327",
+    "esbuild": "^0.25.5",
+    "typescript": "^5.8.3"
+  }
+}
