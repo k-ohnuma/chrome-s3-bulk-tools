@@ -6,8 +6,12 @@ const bulkButtons = () => {
   const existingDownload = document.getElementById("bulk-download-btn");
   const existingOpen = document.getElementById("bulk-open-btn");
 
-  const awsDownLoadButton = document.querySelector<HTMLButtonElement>("#download-object-button");
-  const awsOpenButton = document.querySelector<HTMLButtonElement>("#open-object-button");
+  const awsDownLoadButton = document.querySelector<HTMLButtonElement>(
+    "#download-object-button",
+  );
+  const awsOpenButton = document.querySelector<HTMLButtonElement>(
+    "#open-object-button",
+  );
 
   const configs = [
     {
@@ -16,12 +20,12 @@ const bulkButtons = () => {
       id: "bulk-download-btn",
       text: "一括ダウンロード",
     },
-    {
-      existing: existingOpen,
-      awsButton: awsOpenButton,
-      id: "bulk-open-btn",
-      text: "一括で開く",
-    },
+    // {
+    //   existing: existingOpen,
+    //   awsButton: awsOpenButton,
+    //   id: "bulk-open-btn",
+    //   text: "一括で開く",
+    // },
   ];
 
   configs.forEach(({ existing, awsButton, id, text }) => {
@@ -30,7 +34,8 @@ const bulkButtons = () => {
         const btn = document.createElement("button");
         btn.id = id;
         btn.textContent = text;
-        btn.className = "awsui_button awsui_button_primary";
+        btn.className =
+          "copy-button copy-object-url-button awsui_button_vjswe_1379u_157 awsui_variant-normal_vjswe_1379u_205";
         btn.style.marginLeft = "6px";
         btn.addEventListener("click", () => onClickBulkProcess(awsButton));
         toolbar.appendChild(btn);
@@ -39,6 +44,8 @@ const bulkButtons = () => {
       existing.remove();
     }
   });
+
+  updateBulkButtonsDisabledState();
 };
 
 const onClickBulkProcess = async (button: HTMLButtonElement) => {
@@ -62,6 +69,16 @@ const onClickBulkProcess = async (button: HTMLButtonElement) => {
       allCheckboxes[i].click();
     }
   }
+};
+
+const updateBulkButtonsDisabledState = () => {
+  const anyChecked = getCurrentCheckBoxStatus().some((cb) => cb.checked);
+  ["bulk-download-btn", "bulk-open-btn"].forEach((id) => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.classList.toggle("awsui_disabled_vjswe_1379u_223", !anyChecked);
+    }
+  });
 };
 
 const getCurrentCheckBoxStatus = (): HTMLInputElement[] =>
