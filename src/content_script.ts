@@ -6,77 +6,72 @@ const bulkButtons = () => {
   const existingDownload = document.getElementById("bulk-download-btn");
   const existingOpen = document.getElementById("bulk-open-btn");
 
-  const awsDownLoadButton = document.querySelector<HTMLButtonElement>("#download-object-button");  
-  const awsOpenButton = document.querySelector<HTMLButtonElement>("#open-object-button");  
-  if (isObjectsTab && toolbar && awsDownLoadButton) {
-    if (!existingDownload) {
-      const btn = document.createElement("button");
-      btn.id = "bulk-download-btn";
-      btn.textContent = "一括ダウンロード";
-      btn.className = "awsui_button awsui_button_primary";
-      btn.style.marginLeft = "6px";
-      btn.addEventListener("click", () => onClickBulkProcess(awsDownLoadButton));
-      toolbar.appendChild(btn);
+  const awsDownLoadButton = document.querySelector<HTMLButtonElement>("#download-object-button");
+  const awsOpenButton = document.querySelector<HTMLButtonElement>("#open-object-button");
+
+  const configs = [
+    {
+      existing: existingDownload,
+      awsButton: awsDownLoadButton,
+      id: "bulk-download-btn",
+      text: "一括ダウンロード",
+    },
+    {
+      existing: existingOpen,
+      awsButton: awsOpenButton,
+      id: "bulk-open-btn",
+      text: "一括で開く",
+    },
+  ];
+
+  configs.forEach(({ existing, awsButton, id, text }) => {
+    if (isObjectsTab && toolbar && awsButton) {
+      if (!existing) {
+        const btn = document.createElement("button");
+        btn.id = id;
+        btn.textContent = text;
+        btn.className = "awsui_button awsui_button_primary";
+        btn.style.marginLeft = "6px";
+        btn.addEventListener("click", () => onClickBulkProcess(awsButton));
+        toolbar.appendChild(btn);
+      }
+    } else if (existing) {
+      existing.remove();
     }
-  } else {
-    if (existingDownload) {
-      existingDownload.remove();
-    }
-  }
-  if (isObjectsTab && toolbar && awsOpenButton) {
-    if (!existingOpen) {
-      const btn = document.createElement("button");
-      btn.id = "bulk-open-btn";
-      btn.textContent = "一括で開く";
-      btn.className = "awsui_button awsui_button_primary";
-      btn.style.marginLeft = "6px";
-      btn.addEventListener("click", () => onClickBulkProcess(awsOpenButton));
-      toolbar.appendChild(btn);
-    }
-  } else {
-    if (existingOpen) {
-      existingOpen.remove();
-    }
-  }
+  });
 };
 
 const onClickBulkProcess = async (button: HTMLButtonElement) => {
-
   const allCheckboxes = getCurrentCheckBoxStatus();
   const preCheckBoxStatus = allCheckboxes.map((item) => item.checked);
+
   allCheckboxes.forEach((cb) => {
-    if (cb.checked) {
-      cb.click();
-    }
+    if (cb.checked) cb.click();
   });
 
   for (let i = 0; i < allCheckboxes.length; i++) {
-    if (!preCheckBoxStatus[i]) {
-      continue;
-    }
+    if (!preCheckBoxStatus[i]) continue;
     allCheckboxes[i].click();
     button.click();
-    await new Promise((r) => setTimeout(r, 500));
-
+    await new Promise((r) => setTimeout(r, 200));
     allCheckboxes[i].click();
   }
 
   for (let i = 0; i < allCheckboxes.length; i++) {
-    if (!preCheckBoxStatus[i]) {
-      continue;
+    if (preCheckBoxStatus[i]) {
+      allCheckboxes[i].click();
     }
-    allCheckboxes[i].click();
   }
 };
 
-const getCurrentCheckBoxStatus = (): HTMLInputElement[] => {
-  return Array.from(
+const getCurrentCheckBoxStatus = (): HTMLInputElement[] =>
+  Array.from(
     document.querySelectorAll<HTMLInputElement>(
       'input[type="checkbox"][class^="awsui_native-input"]',
     ),
   );
-};
-const observer = new MutationObserver((mutations) => {
+
+const observer = new MutationObserver(() => {
   bulkButtons();
 });
 
