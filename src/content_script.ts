@@ -7,6 +7,7 @@ const bulkButtons = () => {
   const existingOpen = document.getElementById("bulk-open-btn");
 
   const awsDownLoadButton = document.querySelector<HTMLButtonElement>("#download-object-button");  
+  const awsOpenButton = document.querySelector<HTMLButtonElement>("#open-object-button");  
   if (isObjectsTab && toolbar && awsDownLoadButton) {
     if (!existingDownload) {
       const btn = document.createElement("button");
@@ -14,7 +15,7 @@ const bulkButtons = () => {
       btn.textContent = "一括ダウンロード";
       btn.className = "awsui_button awsui_button_primary";
       btn.style.marginLeft = "6px";
-      btn.addEventListener("click", () => onClickBulkDownload(awsDownLoadButton));
+      btn.addEventListener("click", () => onClickBulkProcess(awsDownLoadButton));
       toolbar.appendChild(btn);
     }
   } else {
@@ -22,40 +23,25 @@ const bulkButtons = () => {
       existingDownload.remove();
     }
   }
-  const buttonConfigs = [
-    // {
-    //   id: "bulk-download-btn",
-    //   text: "一括ダウンロード",
-    //   onClick: onClickBulkDownload,
-    // },
-    {
-      id: "bulk-open-btn",
-      text: "一括で開く",
-      onClick: () => console.log("一括で開く clicked"),
-    },
-  ];
-
-  buttonConfigs.forEach(({ id, text, onClick }) => {
-    const existing = document.getElementById(id);
-    if (isObjectsTab && toolbar) {
-      if (!existing) {
-        const btn = document.createElement("button");
-        btn.id = id;
-        btn.textContent = text;
-        btn.className = "awsui_button awsui_button_primary";
-        btn.style.marginLeft = "6px";
-        btn.addEventListener("click", onClick);
-        toolbar.appendChild(btn);
-      }
-    } else {
-      if (existing) {
-        existing.remove();
-      }
+  if (isObjectsTab && toolbar && awsOpenButton) {
+    if (!existingOpen) {
+      const btn = document.createElement("button");
+      btn.id = "bulk-open-btn";
+      btn.textContent = "一括で開く";
+      btn.className = "awsui_button awsui_button_primary";
+      btn.style.marginLeft = "6px";
+      btn.addEventListener("click", () => onClickBulkProcess(awsOpenButton));
+      toolbar.appendChild(btn);
     }
-  });
+  } else {
+    if (existingOpen) {
+      existingOpen.remove();
+    }
+  }
 };
 
-const onClickBulkDownload = async (downLoadButton: HTMLButtonElement) => {
+const onClickBulkProcess = async (button: HTMLButtonElement) => {
+
   const allCheckboxes = getCurrentCheckBoxStatus();
   const preCheckBoxStatus = allCheckboxes.map((item) => item.checked);
   allCheckboxes.forEach((cb) => {
@@ -69,7 +55,7 @@ const onClickBulkDownload = async (downLoadButton: HTMLButtonElement) => {
       continue;
     }
     allCheckboxes[i].click();
-    downLoadButton.click();
+    button.click();
     await new Promise((r) => setTimeout(r, 500));
 
     allCheckboxes[i].click();
