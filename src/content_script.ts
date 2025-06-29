@@ -4,13 +4,9 @@ const bulkButtons = () => {
     'div[data-testid="object-list-table-action-buttons"]',
   );
   const existingDownload = document.getElementById("bulk-download-btn");
-  const existingOpen = document.getElementById("bulk-open-btn");
 
   const awsDownLoadButton = document.querySelector<HTMLButtonElement>(
     "#download-object-button",
-  );
-  const awsOpenButton = document.querySelector<HTMLButtonElement>(
-    "#open-object-button",
   );
 
   const configs = [
@@ -20,12 +16,6 @@ const bulkButtons = () => {
       id: "bulk-download-btn",
       text: "一括ダウンロード",
     },
-    // {
-    //   existing: existingOpen,
-    //   awsButton: awsOpenButton,
-    //   id: "bulk-open-btn",
-    //   text: "一括で開く",
-    // },
   ];
 
   configs.forEach(({ existing, awsButton, id, text }) => {
@@ -73,7 +63,7 @@ const onClickBulkProcess = async (button: HTMLButtonElement) => {
 
 const updateBulkButtonsDisabledState = () => {
   const anyChecked = getCurrentCheckBoxStatus().some((cb) => cb.checked);
-  ["bulk-download-btn", "bulk-open-btn"].forEach((id) => {
+  ["bulk-download-btn"].forEach((id) => {
     const btn = document.getElementById(id);
     if (btn) {
       btn.classList.toggle("awsui_disabled_vjswe_1379u_223", !anyChecked);
